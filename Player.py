@@ -106,6 +106,8 @@ class Player(Sprite):
 
 		#Create Anim
 
+		#Кирилл , я хз , но надо этот блок кода сделать покороче 
+
 			#STAY
 		self.boltAnimStayLeft = make_boltAnim(ANIMATION_STAY_LEFT, ANIMATION_DELAY)
 		self.boltAnimStayLeft.play()
@@ -238,6 +240,7 @@ class Player(Sprite):
 					self.rect.top = pl.rect.bottom
 					self.yvel = 0
 					#act block
+#Крч, идея. Надо чтоб при исполнении условия , над этим блоком появлялась монетка
 					if pl.actionB:
 						xact = pl.rect.x
 						yact = pl.rect.y

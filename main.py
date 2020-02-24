@@ -54,11 +54,6 @@ for row in level:
 			sprite_group.add(coin)
 			platforms.append(coin)
 			coin.isItem = True
-		elif col =='$':
-			coin =Platform(x, y,'sprites/platform/coin.png')
-			sprite_group.add(coin)
-			platforms.append(coin)
-			coin.isItem = True
 			coin.collideV = False
 		elif col =='#':
 			spike =Platform(x, y,'sprites/platform/spike.png')
@@ -92,7 +87,6 @@ def camera_func(camera, target_rect):
 	t = min(0,t)
 
 	return pygame.Rect(l,t,w,h)
-
 total_level_width = len(level[0])*40
 total_level_height = len(level) *40
 
