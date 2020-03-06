@@ -1,8 +1,8 @@
 import pygame
-import Camera
+
+
 import sys
-from platforms import Platform
-from Player import Player
+
 sys.path.append('levels')
 
 from levels import *
@@ -10,6 +10,10 @@ from levels import *
  
 pygame.init()
 pygame.display.set_caption('Дровосек 2')
+from Player import Player
+from platforms import Platform
+
+#SOUND
 
 
 SIZE = [640, 480]
@@ -132,6 +136,8 @@ while done:
 	#sprite_group.draw(screen)
 
 	pygame.draw.rect(screen, hero.BarColor, (20, 20, hero.hp,20))
+	if hero.hp < 0:
+		done = False
 	#Display
 	window.blit(screen ,(0, 0))
 	#UPDATE

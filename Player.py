@@ -4,6 +4,7 @@ from pygame.sprite import Sprite, collide_rect
 from pygame import Surface
 from pygame.image import load
 from platforms import Platform
+from sound import *
 
 import pyganim
 
@@ -148,6 +149,8 @@ class Player(Sprite):
 
 	def hit(self):
 		self.hp -=10
+#Sound
+
 
 	
 
@@ -176,22 +179,30 @@ class Player(Sprite):
 			if not up:
 				self.image.fill((0,0,0))
 				self.boltAnimLeft.blit(self.image, (0,0))
+				walkSound.play()
+
 				
 		if right:
 			self.xvel = MOVE_SPEED
 			if not up:
 				self.image.fill((0,0,0))
 				self.boltAnimRight.blit(self.image, (0,0))
+				walkSound.play()
 			else:
 				self.image.fill((0,0,0))
 				self.boltAnimJumpRight.blit(self.image, (0,0))
 		if up:
+			walkSound.stop()
+			jumpSound.play()
+			
 			if self.onGround:
 				self.yvel = -JUMP_POWER
+				
 				
 			
 		if not(right or left):
 			self.xvel = 0
+			walkSound.stop()
 
 			if not up and self.lookRight:
 				self.image.fill((0,0,0))
@@ -218,6 +229,7 @@ class Player(Sprite):
 			if collide_rect(self, pl)  :
 				if xvel > 0 and pl.collideV and not pl.isItem:
 					self.rect.right = pl.rect.left
+
 				if xvel < 0 and pl.collideV and not pl.isItem:
 					self.rect.left = pl.rect.right
 				if yvel > 0 and not pl.isItem:
@@ -234,7 +246,6 @@ class Player(Sprite):
 						else:
 							self.image.fill((0,0,0))
 							self.boltAnimHurtRight.blit(self.image, (-20,0))
-
 				#Если убрать нижнее сравнение , то герой пубет прыгать сквозь препядствия , но приземляться на них
 				if yvel < 0 and pl.collideV and not pl.isItem :
 					self.rect.top = pl.rect.bottom
@@ -245,10 +256,12 @@ class Player(Sprite):
 						xact = pl.rect.x
 						yact = pl.rect.y
 						pl.actionActive('sprites/platform/act1.png', xact,yact)
+						#pl.SpawnCoin('sprites/platform/coin.png', xact, yact)
 				#item
 				if xvel > 0 and pl.collideV or xvel < 0 and pl.collideV or yvel > 0:
 					if pl.isItem :
 						pl.CollectItem()
+
 
 						
 
