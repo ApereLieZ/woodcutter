@@ -58,12 +58,27 @@ for row in level:
 			sprite_group.add(coin)
 			platforms.append(coin)
 			coin.isItem = True
+			coin.isCoin = True
 			coin.collideV = False
 		elif col =='#':
 			spike =Platform(x, y,'sprites/platform/spike.png')
 			sprite_group.add(spike)
 			platforms.append(spike)
 			spike.atack = True
+		elif col == "H":
+			heart = Platform(x, y,'sprites/platform/hurt.png')
+			sprite_group.add(heart)
+			platforms.append(heart)
+			heart.isHeart = True
+			heart.isItem = True
+			heart.colideV = False
+		elif col == "+":
+			poution = Platform(x, y,'sprites/platform/poution.png')
+			sprite_group.add(poution)
+			platforms.append(poution)
+			poution.isPoution = True
+			poution.isItem = True
+			poution.colideV = False
 		x += 40
 	y += 40
 	x =  0
@@ -95,6 +110,9 @@ total_level_width = len(level[0])*40
 total_level_height = len(level) *40
 
 camera = Camera(camera_func, total_level_width, total_level_height)
+# Fonts
+pygame.font.init()
+infFont = pygame.font.Font(None,32)
 
 
 done = True
@@ -134,10 +152,18 @@ while done:
 		screen.blit(e.image, camera.apply(e))
 		
 	#sprite_group.draw(screen)
+	screen.blit(infFont.render(u"Life: %s" % hero.life,1,(200,200,200)), (550,20 ))
+	screen.blit(infFont.render(u"Coin: %s" % hero.coin,1,(200,200,200)), (550,450 ))
 
 	pygame.draw.rect(screen, hero.BarColor, (20, 20, hero.hp,20))
-	if hero.hp < 0:
+	if hero.hp <0 and hero.life <=0:
 		done = False
+	if hero.hp < 0:
+		hero.life -= 1
+		hero.rect.x = 55
+		hero.rect.y = 55
+		hero.hp = 100
+	
 	#Display
 	window.blit(screen ,(0, 0))
 	#UPDATE

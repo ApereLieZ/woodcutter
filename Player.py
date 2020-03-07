@@ -97,6 +97,8 @@ class Player(Sprite):
 		self.hp = 100
 		self.BarColor = green
 		self.hit = False
+		self.life = 3
+		self.coin = 0
 		
 		def make_boltAnim(anim_list, delay):
 			boltAnim = []
@@ -147,15 +149,22 @@ class Player(Sprite):
 		elif player_helth < 50:
 			self.BarColor = red
 
-	def hit(self):
-		self.hp -=10
-#Sound
+#HIT
+	"""def hit(self):
+			self.hp -=10
+			self.yvel = -JUMP_POWER
+			walkSound.stop()
 
-
-	
-
+			if self.lookleft:
+				self.image.fill((0,0,0))
+				self.boltAnimHurtLeft.blit(self.image, (0,0))
+			else:
+				self.image.fill((0,0,0))
+				self.boltAnimHurtRight.blit(self.image, (-20,0))
+	"""
 
 	def update(self, left , right, up, platforms):
+			
 #hp
 		self.helth_bar(self.hp)
 #check look
@@ -237,9 +246,11 @@ class Player(Sprite):
 					self.onGround = True
 					self.yvel = 0
 					if pl.atack:
-
-						self.hp -=10
+						self.hp -=50
 						self.yvel = -JUMP_POWER
+						walkSound.stop()
+						hurtSound.play()
+
 						if self.lookleft:
 							self.image.fill((0,0,0))
 							self.boltAnimHurtLeft.blit(self.image, (0,0))
@@ -256,11 +267,31 @@ class Player(Sprite):
 						xact = pl.rect.x
 						yact = pl.rect.y
 						pl.actionActive('sprites/platform/act1.png', xact,yact)
+						walkSound.stop()
+						actionBlockSound.play()
 						#pl.SpawnCoin('sprites/platform/coin.png', xact, yact)
 				#item
 				if xvel > 0 and pl.collideV or xvel < 0 and pl.collideV or yvel > 0:
 					if pl.isItem :
+						walkSound.stop()
 						pl.CollectItem()
+
+						if pl.isHeart:
+							heartSound.play()
+							self.life +=1
+
+						elif pl.isCoin:
+							coinSound.play()
+							self.coin +=1
+						elif pl.isPoution:
+							self.hp +=45
+							poutionSound.play()
+
+
+
+
+
+
 
 
 						

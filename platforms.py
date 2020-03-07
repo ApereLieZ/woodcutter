@@ -1,6 +1,5 @@
 from pygame.sprite import Sprite
 from pygame.image import load
-from sound import coinSound
 
 
 class Platform(Sprite):
@@ -15,8 +14,11 @@ class Platform(Sprite):
 		self.collideV = True
 		self.actionB = False
 		self.isItem = False
+		self.isCoin = False
 		self.atack = False
 		self.targetSound = False
+		self.isHeart = False
+		self.isPoution = False
 
 	def actionActive(self,src,x,y):
 		Sprite.__init__(self)
@@ -28,9 +30,8 @@ class Platform(Sprite):
 		self.actionB = False
 
 	def CollectItem(self):
-		coinSound.play()
 		self.rect = self.image.get_rect()
-		print("coin")
+		print("item")
 
 	def SpawnCoin(self, src, x,y):
 		self.src = src
