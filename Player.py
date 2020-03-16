@@ -16,6 +16,16 @@ MOVE_SPEED = 3
 G = 0.4
 JUMP_POWER = 9
 
+SAVES = open("saves.txt", 'r' )
+fileS = SAVES.readlines()
+xS = int(fileS[0])
+yS = int(fileS[1])
+iS = int(fileS[4])
+coinS = int(fileS[2])
+lifeS = int(fileS[3])
+
+SAVES.close()
+
 
 ANIMATION_DELAY = 0.15
 
@@ -97,8 +107,10 @@ class Player(Sprite):
 		self.hp = 100
 		self.BarColor = green
 		self.hit = False
-		self.life = 3
-		self.coin = 0
+		self.life = lifeS
+		self.coin = coinS
+		self.nextLVL = False
+		self.iS = iS
 		
 		def make_boltAnim(anim_list, delay):
 			boltAnim = []
@@ -235,7 +247,8 @@ class Player(Sprite):
 	def collide(self, xvel , yvel, platforms):
 		for pl in platforms:
 			#Коллизия платформ
-			if collide_rect(self, pl)  :
+			if collide_rect(self, pl) and not pl.collideAbsolute :
+
 				if xvel > 0 and pl.collideV and not pl.isItem:
 					self.rect.right = pl.rect.left
 
@@ -246,7 +259,7 @@ class Player(Sprite):
 					self.onGround = True
 					self.yvel = 0
 					if pl.atack:
-						self.hp -=50
+						self.hp -=30
 						self.yvel = -JUMP_POWER
 						walkSound.stop()
 						hurtSound.play()
@@ -272,20 +285,44 @@ class Player(Sprite):
 						#pl.SpawnCoin('sprites/platform/coin.png', xact, yact)
 				#item
 				if xvel > 0 and pl.collideV or xvel < 0 and pl.collideV or yvel > 0:
-					if pl.isItem :
-						walkSound.stop()
-						pl.CollectItem()
+					
 
-						if pl.isHeart:
+					if pl.isItem:
+						walkSound.stop()
+						if pl.isSave:
+							SAVES1 = open("saves.txt", 'w' )
+							SAVES1.write(str(pl.rect.x )+ '\n' + str(pl.rect.y) + '\n' + str(self.coin) + '\n' + str(self.life) +'\n' +str(self.iS))
+							SAVES1.close()
+							print("SEVED")
+							pl.isSave = False
+							pl.CollectItem()
+
+						if pl.isWin:
+							self.nextLVL =True
+							self.iS = self.iS +1
+							SAVES1 = open("saves.txt", 'w' )
+							SAVES1.write(str(pl.rect.x )+ '\n' + str(pl.rect.y) + '\n' + str(self.coin) + '\n' + str(self.life) +'\n' +str(self.iS))
+							SAVES1.close()
+							pl.isWin = False
+							pl.CollectItem()
+							print("WIN")
+
+						
+
+						elif pl.isHeart:
 							heartSound.play()
 							self.life +=1
+							pl.CollectItem()
 
 						elif pl.isCoin:
 							coinSound.play()
 							self.coin +=1
+							pl.CollectItem()
 						elif pl.isPoution:
-							self.hp +=45
+							self.hp =100
 							poutionSound.play()
+							pl.CollectItem()
+					
 
 
 

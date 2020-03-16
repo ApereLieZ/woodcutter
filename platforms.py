@@ -12,6 +12,7 @@ class Platform(Sprite):
 		self.rect.x = x
 		self.rect.y = y
 		self.collideV = True
+		self.collideAbsolute = False
 		self.actionB = False
 		self.isItem = False
 		self.isCoin = False
@@ -19,6 +20,8 @@ class Platform(Sprite):
 		self.targetSound = False
 		self.isHeart = False
 		self.isPoution = False
+		self.isSave = False
+		self.isWin = False
 
 	def actionActive(self,src,x,y):
 		Sprite.__init__(self)
