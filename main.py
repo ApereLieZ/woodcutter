@@ -15,7 +15,7 @@ from platforms import Platform
 #SOUND
 
 
-SIZE = [800, 600]
+SIZE = [700, 600]
 #Window create
 window = pygame.display.set_mode(SIZE)
 #game win
@@ -27,6 +27,8 @@ xS = int(fileS[0])
 yS = int(fileS[1])
 iS = int(fileS[4])
 SAVES.close()
+
+bg = ["sprites/bg/bg1.png","sprites/bg/bg2.png"]
 
 
 
@@ -121,7 +123,7 @@ class Camera:
 
 	def update(self, target):
 		self.state = self.camera_func(self.state, target.rect)
-
+		
 def camera_func(camera, target_rect):
 	l = -target_rect.x + SIZE[0]/2
 	t = -target_rect.y + SIZE[1]/2
@@ -141,6 +143,7 @@ camera = Camera(camera_func, total_level_width, total_level_height)
 pygame.font.init()
 infFont = pygame.font.Font(None,32)
 
+background_image=pygame.image.load(bg[iS]).convert()
 
 done = True
 
@@ -171,7 +174,7 @@ while done:
 
 	#FILL SCREEN
 	screen.fill((0, 0 , 0))
-
+	screen.blit(background_image, [1-hero.rect.x*0.1,0])
 	#ADD HERO
 	hero.update(left, right,up, platforms)
 	camera.update(hero)
@@ -211,6 +214,7 @@ while done:
 		platforms= []
 		hero.rect.x = 56
 		hero.rect.y = 56
+		background_image=pygame.image.load(bg[iS]).convert()
 		CreateLevel(x,y,iS)
 		sprite_group.add(hero)
 		hero.nextLVL = False
