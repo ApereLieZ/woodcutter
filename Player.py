@@ -300,9 +300,11 @@ class Player(Sprite):
 						if pl.isWin:
 							self.nextLVL =True
 							self.iS = self.iS +1
+							'''
 							SAVES1 = open("saves.txt", 'w' )
 							SAVES1.write(str(pl.rect.x )+ '\n' + str(pl.rect.y) + '\n' + str(self.coin) + '\n' + str(self.life) +'\n' +str(self.iS))
 							SAVES1.close()
+							'''
 							pl.isWin = False
 							pl.CollectItem()
 							print("WIN")
@@ -310,16 +312,22 @@ class Player(Sprite):
 						
 
 						elif pl.isHeart:
+							jumpSound.stop()
+							walkSound.stop()
 							heartSound.play()
 							self.life +=1
 							pl.CollectItem()
 
 						elif pl.isCoin:
+							jumpSound.stop()
+							walkSound.stop()
 							coinSound.play()
 							self.coin +=1
 							pl.CollectItem()
 						elif pl.isPoution:
 							self.hp =100
+							jumpSound.stop()
+							walkSound.stop()
 							poutionSound.play()
 							pl.CollectItem()
 					

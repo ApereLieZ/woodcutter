@@ -49,14 +49,26 @@ def CreateLevel(x,y,i):
 	window.fill((0, 0 , 0))
 	x = 0
 	y = 0
+	Lenghty = 0
 	for row in levels[i]:
+		Widthx = 0
 		for col in row:
 			if col =='-':
-				block = Platform(x, y,'sprites/platform/block.png')
-				sprite_group.add(block)
-				platforms.append(block)
+				if row[Widthx-1] ==' ' or row[Widthx-1] =='#':
+					block = Platform(x, y,'sprites/platform/Tile_01.png')
+					sprite_group.add(block)
+					platforms.append(block)
+				elif Widthx+1 != len(row) :
+					if row[Widthx+1] ==' ' or row[Widthx+1] =='#':
+						block = Platform(x, y,'sprites/platform/Tile_03.png')
+						sprite_group.add(block)
+						platforms.append(block)
+					else:
+						block = Platform(x, y,'sprites/platform/Tile_02.png')
+						sprite_group.add(block)
+						platforms.append(block)
 			elif col =='*':
-				pl = Platform(x, y,'sprites/platform/glass.jpg')
+				pl = Platform(x, y+40,'sprites/platform/glass.jpg')
 				sprite_group.add(pl)
 				platforms.append(pl)
 				pl.collideV = False
@@ -73,7 +85,7 @@ def CreateLevel(x,y,i):
 				coin.isCoin = True
 				coin.collideV = False
 			elif col =='#':
-				spike =Platform(x, y,'sprites/platform/spike.png')
+				spike =Platform(x+5, y+16,'sprites/platform/spike.png')
 				sprite_group.add(spike)
 				platforms.append(spike)
 				spike.atack = True
@@ -106,6 +118,8 @@ def CreateLevel(x,y,i):
 				NextLevelBlock.collideV = False
 				NextLevelBlock.isItem = True
 			x += 40
+			Widthx += 1
+		Lenghty +=1
 		y += 40
 		x =  0
 
