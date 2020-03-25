@@ -8,6 +8,8 @@ from sound import *
 
 import pyganim
 
+SoundPack = ['sound/theme.mp3', 'sound/hell.mp3']
+
 green= [0,255,0]
 yellow=[255,255,0]
 red = [255,0,0]
@@ -26,6 +28,8 @@ lifeS = int(fileS[3])
 
 SAVES.close()
 
+moveR = True
+moveV = 0
 
 ANIMATION_DELAY = 0.15
 
@@ -245,7 +249,25 @@ class Player(Sprite):
 		self.collide(0, self.yvel, platforms)
 
 	def collide(self, xvel , yvel, platforms):
+
 		for pl in platforms:
+
+
+			if pl.isMoving:
+				if pl.moveR:
+					pl.rect.x +=1
+					pl.moveV +=1
+				elif not pl.moveR: 
+					pl.rect.x -=1
+					pl.moveV -=1
+				if  pl.moveV >= 200:
+					pl.moveR = False
+				elif pl.moveV <= 0:
+					pl.moveR = True
+
+
+				
+
 			#Коллизия платформ
 			if collide_rect(self, pl) and not pl.collideAbsolute :
 
@@ -258,6 +280,13 @@ class Player(Sprite):
 					self.rect.bottom = pl.rect.top
 					self.onGround = True
 					self.yvel = 0
+					'''
+					if pl.isMoving and pl.moveR:
+						self.rect.x -= 8
+					elif pl.isMoving and not pl.moveR:
+						self.rect.x -= 8
+					'''
+
 					if pl.atack:
 						self.hp -=30
 						self.yvel = -JUMP_POWER
@@ -275,6 +304,7 @@ class Player(Sprite):
 					self.rect.top = pl.rect.bottom
 					self.yvel = 0
 					#act block
+
 #Крч, идея. Надо чтоб при исполнении условия , над этим блоком появлялась монетка
 					if pl.actionB:
 						xact = pl.rect.x
@@ -300,11 +330,13 @@ class Player(Sprite):
 						if pl.isWin:
 							self.nextLVL =True
 							self.iS = self.iS +1
-							'''
+							pygame.mixer.music.load(SoundPack[self.iS])
+							pygame.mixer.music.play(-1)
+							
 							SAVES1 = open("saves.txt", 'w' )
 							SAVES1.write(str(pl.rect.x )+ '\n' + str(pl.rect.y) + '\n' + str(self.coin) + '\n' + str(self.life) +'\n' +str(self.iS))
 							SAVES1.close()
-							'''
+							
 							pl.isWin = False
 							pl.CollectItem()
 							print("WIN")

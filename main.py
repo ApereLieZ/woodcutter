@@ -12,6 +12,7 @@ pygame.display.set_caption('Дровосек 2')
 from Player import Player
 from platforms import Platform
 
+
 #SOUND
 
 
@@ -38,6 +39,24 @@ left = right = up =False
 
 
 #Create level
+spriteForLVL = [[
+'sprites/platform/Tile_31.png',
+'sprites/platform/Tile_01.png',
+'sprites/platform/Tile_03.png',
+'sprites/platform/Tile_02.png',
+'sprites/platform/Tile_08.png',
+'sprites/platform/Tile_55.png',
+'sprites/platform/spike.png',
+],
+[
+'sprites/platform/tile5.png',
+'sprites/platform/tile1.png',
+'sprites/platform/tile3.png',
+'sprites/platform/tile2.png',
+'sprites/platform/tile8.png',
+'sprites/platform/tile5.png',
+'sprites/platform/lava.png',
+]]
 
 sprite_group = pygame.sprite.Group()
 platforms= []
@@ -50,28 +69,39 @@ def CreateLevel(x,y,i):
 	x = 0
 	y = 0
 	Lenghty = 0
+
 	for row in levels[i]:
+		print(i)
 		Widthx = 0
 		for col in row:
 			if col =='-':
-				if row[Widthx-1] ==' ' or row[Widthx-1] =='#':
-					block = Platform(x, y,'sprites/platform/Tile_01.png')
-					sprite_group.add(block)
-					platforms.append(block)
-				elif Widthx+1 != len(row) :
-					if row[Widthx+1] ==' ' or row[Widthx+1] =='#':
-						block = Platform(x, y,'sprites/platform/Tile_03.png')
-						sprite_group.add(block)
-						platforms.append(block)
+					if levels[i][Lenghty-1][Widthx]  != '-' :
+						if Widthx+1 != len(row) :
+							if (row[Widthx+1] !='-' or row[Widthx+1] =='#') and (row[Widthx-1] !='-' or row[Widthx-1] =='#'):
+								block = Platform(x, y,spriteForLVL[i][0])
+								sprite_group.add(block)
+								platforms.append(block)
+							elif row[Widthx-1] ==' ' or row[Widthx-1] =='#' or row[Widthx-1] =='$':
+								block = Platform(x, y,spriteForLVL[i][1])
+								sprite_group.add(block)
+								platforms.append(block)
+							elif row[Widthx+1] ==' ' or row[Widthx+1] =='#' or row[Widthx-1] =='$':
+								block = Platform(x, y,spriteForLVL[i][2])
+								sprite_group.add(block)
+								platforms.append(block)
+							else:
+								block = Platform(x, y,spriteForLVL[i][3])
+								sprite_group.add(block)
+								platforms.append(block)
 					else:
-						block = Platform(x, y,'sprites/platform/Tile_02.png')
+						block = Platform(x, y,spriteForLVL[i][5])
 						sprite_group.add(block)
-						platforms.append(block)
+						platforms.append(block)						
 			elif col =='*':
-				pl = Platform(x, y+40,'sprites/platform/glass.jpg')
-				sprite_group.add(pl)
-				platforms.append(pl)
-				pl.collideV = False
+					glass = Platform(x, y+36,spriteForLVL[i][4])
+					sprite_group.add(glass)
+					platforms.append(glass)
+					glass.collideV = False
 			elif col =='@':
 				actblock = Platform(x, y,'sprites/platform/act.png')
 				sprite_group.add(actblock)
@@ -85,7 +115,7 @@ def CreateLevel(x,y,i):
 				coin.isCoin = True
 				coin.collideV = False
 			elif col =='#':
-				spike =Platform(x+5, y+16,'sprites/platform/spike.png')
+				spike =Platform(x, y+16,spriteForLVL[i][6])
 				sprite_group.add(spike)
 				platforms.append(spike)
 				spike.atack = True
@@ -117,6 +147,11 @@ def CreateLevel(x,y,i):
 				NextLevelBlock.isWin = True
 				NextLevelBlock.collideV = False
 				NextLevelBlock.isItem = True
+			elif col == '=':
+				MBlock = Platform(x, y,'sprites/platform/tile9.png')
+				sprite_group.add(MBlock)
+				platforms.append(MBlock)
+				MBlock.isMoving = True
 			x += 40
 			Widthx += 1
 		Lenghty +=1
@@ -217,6 +252,7 @@ while done:
 		SAVES = open("saves.txt", 'r' )
 		fileS = SAVES.readlines()
 		
+		
 		iS = int(fileS[4])
 		SAVES.close()
 		for e in sprite_group:
@@ -231,6 +267,13 @@ while done:
 		background_image=pygame.image.load(bg[iS]).convert()
 		CreateLevel(x,y,iS)
 		sprite_group.add(hero)
+
+		total_level_width = len(levels[iS][0])*40
+		total_level_height = len(levels[iS]) *40
+		camera = Camera(camera_func, total_level_width, total_level_height)
+		for e in sprite_group:
+			screen.blit(e.image, camera.apply(e))
+
 		hero.nextLVL = False
 
 		

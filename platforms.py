@@ -22,6 +22,10 @@ class Platform(Sprite):
 		self.isPoution = False
 		self.isSave = False
 		self.isWin = False
+		self.isMoving = False
+		####
+		self.moveR = True
+		self.moveV = 0
 
 	def actionActive(self,src,x,y):
 		Sprite.__init__(self)
