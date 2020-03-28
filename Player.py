@@ -115,6 +115,8 @@ class Player(Sprite):
 		self.coin = coinS
 		self.nextLVL = False
 		self.iS = iS
+		self.onMovementPlatform = False
+		self.move = False
 		
 		def make_boltAnim(anim_list, delay):
 			boltAnim = []
@@ -165,6 +167,28 @@ class Player(Sprite):
 		elif player_helth < 50:
 			self.BarColor = red
 
+# PLATFORM
+	def move_platform_with_player(self,pl):
+		walkSound.stop()
+		if  self.lookRight and not self.move:
+			self.image.fill((0,0,0))
+			self.boltAnimStayRight.blit(self.image, (0,0))
+		elif self.lookleft and not self.move :
+			self.image.fill((0,0,0))
+			self.boltAnimStayLeft.blit(self.image, (-20,0))
+
+
+		if pl.isMoving and pl.moveR:
+			self.onMovementPlatform = True
+			self.xvel = 2
+
+		elif pl.isMoving and not pl.moveR:
+			self.onMovementPlatform = True
+			self.xvel = -2
+		else:
+			self.onMovementPlatform = False
+
+
 #HIT
 	"""def hit(self):
 			self.hp -=10
@@ -180,7 +204,6 @@ class Player(Sprite):
 	"""
 
 	def update(self, left , right, up, platforms):
-			
 #hp
 		self.helth_bar(self.hp)
 #check look
@@ -200,6 +223,7 @@ class Player(Sprite):
 
 
 		if left:
+			self.move = True
 			self.xvel = -MOVE_SPEED
 			if not up:
 				self.image.fill((0,0,0))
@@ -208,6 +232,7 @@ class Player(Sprite):
 
 				
 		if right:
+			self.move = True
 			self.xvel = MOVE_SPEED
 			if not up:
 				self.image.fill((0,0,0))
@@ -222,10 +247,13 @@ class Player(Sprite):
 			
 			if self.onGround:
 				self.yvel = -JUMP_POWER
-				
+		#For moving platform
+		if not(right or left):
+			self.move = False
 				
 			
-		if not(right or left):
+		if not(right or left) and not self.onMovementPlatform:
+			self.move = False
 			self.xvel = 0
 			walkSound.stop()
 
@@ -255,14 +283,16 @@ class Player(Sprite):
 
 			if pl.isMoving:
 				if pl.moveR:
-					pl.rect.x +=1
-					pl.moveV +=1
-				elif not pl.moveR: 
-					pl.rect.x -=1
+					pl.rect.x += 1
+					pl.moveV += 1
+				elif not (pl.moveR): 
+					pl.rect.x -= 1
 					pl.moveV -=1
-				if  pl.moveV >= 200:
+				if  pl.moveV == 200:
 					pl.moveR = False
-				elif pl.moveV <= 0:
+					self.xvel = 0
+				elif pl.moveV == 0:
+					self.xvel =0
 					pl.moveR = True
 
 
@@ -280,12 +310,10 @@ class Player(Sprite):
 					self.rect.bottom = pl.rect.top
 					self.onGround = True
 					self.yvel = 0
-					'''
-					if pl.isMoving and pl.moveR:
-						self.rect.x -= 8
-					elif pl.isMoving and not pl.moveR:
-						self.rect.x -= 8
-					'''
+					
+					self.move_platform_with_player(pl)
+
+					
 
 					if pl.atack:
 						self.hp -=30

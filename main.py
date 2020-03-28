@@ -62,11 +62,11 @@ sprite_group = pygame.sprite.Group()
 platforms= []
 
 
-x=0
+x=0.0
 y=0
 def CreateLevel(x,y,i):
 	window.fill((0, 0 , 0))
-	x = 0
+	x = 0.0
 	y = 0
 	Lenghty = 0
 
@@ -152,11 +152,11 @@ def CreateLevel(x,y,i):
 				sprite_group.add(MBlock)
 				platforms.append(MBlock)
 				MBlock.isMoving = True
-			x += 40
+			x += 40.0
 			Widthx += 1
 		Lenghty +=1
 		y += 40
-		x =  0
+		x =  0.0
 
 CreateLevel(x,y,iS)
 sprite_group.add(hero)
